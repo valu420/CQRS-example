@@ -84,14 +84,14 @@ class CommandHandler:
         producto = Producto(cmd.id, cmd.nombre, cmd.cantidad, cmd.precio)
         write_db[cmd.id] = producto
         _sincronizar_read_db(producto)
-        print(f"[COMMAND] ✅ Producto '{cmd.nombre}' agregado.")
+        print(f"[COMMAND] Producto '{cmd.nombre}' agregado.")
 
     def handle_actualizar_stock(self, cmd: ActualizarStockCommand):
         if cmd.id not in write_db:
             raise ValueError(f"Producto '{cmd.id}' no encontrado.")
         write_db[cmd.id].cantidad = cmd.nueva_cantidad
         _sincronizar_read_db(write_db[cmd.id])
-        print(f"[COMMAND] ✅ Stock de '{cmd.id}' actualizado a {cmd.nueva_cantidad}.")
+        print(f"[COMMAND] Stock de '{cmd.id}' actualizado a {cmd.nueva_cantidad}.")
 
     def handle_eliminar(self, cmd: EliminarProductoCommand):
         if cmd.id not in write_db:
@@ -99,7 +99,7 @@ class CommandHandler:
         nombre = write_db[cmd.id].nombre
         del write_db[cmd.id]
         del read_db[cmd.id]
-        print(f"[COMMAND] ✅ Producto '{nombre}' eliminado.")
+        print(f"[COMMAND] Producto '{nombre}' eliminado.")
 
 
 # ─────────────────────────────────────────────
@@ -130,15 +130,15 @@ class QueryHandler:
 
     def handle_obtener(self, query: ObtenerProductoQuery) -> dict | None:
         resultado = read_db.get(query.id)
-        print(f"[QUERY]   🔍 Buscando producto '{query.id}'...")
+        print(f"[QUERY]   Buscando producto '{query.id}'...")
         return resultado
 
     def handle_listar(self, query: ListarProductosQuery) -> list[dict]:
-        print("[QUERY]   🔍 Listando todos los productos...")
+        print("[QUERY]   Listando todos los productos...")
         return list(read_db.values())
 
     def handle_buscar_por_nombre(self, query: BuscarPorNombreQuery) -> list[dict]:
-        print(f"[QUERY]   🔍 Buscando productos con '{query.texto}'...")
+        print(f"[QUERY]  Buscando productos con '{query.texto}'...")
         return [
             p for p in read_db.values()
             if query.texto.lower() in p["nombre"].lower()
